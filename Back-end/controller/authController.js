@@ -56,6 +56,9 @@ const verifyEmail = async(req, res) => {
 
 const login = async(req, res) => {
     const {email, password} = req.body
+    if(!email || !password) {
+        throw new CustomError.BadRequestError('Please provide email and password')
+    }
     const user = await User.findOne({email})
     if(!user) {
         throw new CustomError.UnauthorizedError('Wrong credentials! email or password is incorrect')
@@ -80,7 +83,7 @@ const login = async(req, res) => {
         }
         refreshToken = existingToken.refreshToken
         // attach cookie to response
-        attachCookiesToResponse({res, user, refreshToken})
+        attachCookiesToResponse({res, user: tokenUser, refreshToken})
         res.status(StatusCodes.OK).json({user: tokenUser})
         return
     }
@@ -92,7 +95,7 @@ const login = async(req, res) => {
     // create user token in database which will use, if he login
     await Token.create(userToken)
 
-    attachCookiesToResponse({res, user, refreshToken})
+    attachCookiesToResponse({res, user: tokenUser, refreshToken})
     res.status(StatusCodes.OK).json({user: tokenUser})
 }
 
