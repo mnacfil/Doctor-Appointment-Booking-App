@@ -5,7 +5,14 @@ const errorHandlerMiddleware = (err, req, res, next) => {
         statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
         message: err.message || 'Internal Server Error, Please try again later!'
     }
-    return res.status(customError.statusCode).json({message: err.message})
+    if(err.name === 'ValidationError') {
+        customError.statusCode = StatusCodes.BAD_REQUEST
+        customError.message = Object.values(err.errors).map(property => {
+            const {message} = property
+            return message
+        }).join(', ')
+    }
+    return res.status(customError.statusCode).json({message: customError.message})
 }
 
 module.exports = errorHandlerMiddleware

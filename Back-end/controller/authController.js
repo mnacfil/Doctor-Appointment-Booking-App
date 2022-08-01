@@ -64,7 +64,6 @@ const login = async(req, res) => {
         throw new CustomError.UnauthorizedError('Wrong credentials! email or password is incorrect')
     }
     const isPasswordCorrect = await user.isPasswordCorrect(password)
-    console.log(isPasswordCorrect)
     if(!isPasswordCorrect) {
         console.log('wrong password')
         throw new CustomError.UnauthorizedError('Wrong credentials! email or password is incorrect')
@@ -72,10 +71,10 @@ const login = async(req, res) => {
     if(!user.isVerified) {
         throw new CustomError.UnauthorizedError('Please verified your email before login.')
     }
+
     const tokenUser = createTokenUser(user)
     let refreshToken = ""
-
-    const existingToken = await Token.findOne({user: user_id})
+    const existingToken = await Token.findOne({user: user._id})
     if(existingToken) {
         const {isValid} = existingToken
         if(!isValid) {
@@ -100,7 +99,17 @@ const login = async(req, res) => {
 }
 
 const logout = async(req, res) => {
-    res.send('logout')
+    // find user token and delete in db
+    console.log(req.user)
+    // res.cookie('accessToken', "", {
+    //     signed: true,
+    //     expires: new Date(Date.now())
+    // })
+    // res.cookie('refreshToken', "", {
+    //     signed: true,
+    //     expires: new Date(Date.now())
+    // })
+    res.send('forgotPassword')
 }
 
 const forgotPassword = async(req, res) => {

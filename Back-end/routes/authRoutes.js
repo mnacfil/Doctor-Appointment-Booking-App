@@ -10,10 +10,12 @@ const {
     resetPassword
 } = require('../controller/authController')
 
+const {authenticateUser} = require('../middleware/authentication')
+
 router.post('/register', register)
 router.post('/verify-email', verifyEmail)
 router.post('/login', login)
-router.post('/logout', logout)
+router.delete('/logout', authenticateUser, logout)
 router.post('/forgot-password', forgotPassword)
 router.post('/reset-password', resetPassword)
 
