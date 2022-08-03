@@ -4,8 +4,7 @@ const Token = require('../model/Token')
 const CustomError = require('../error')
 
 const authenticateUser = async (req, res, next) => {
-    const {accessJWT, refreshJWT} = req.signedCookies // return undefined
-    console.log(accessJWT)
+    const {accessJWT, refreshJWT} = req.signedCookies
     try {
         if(accessJWT) {
             const {user: {name, email, userId}}= isTokenValid(accessJWT)

@@ -1,4 +1,4 @@
-const sendEmail = require('./sendEmail')
+const sendEmail = require('../sendEmail')
 
 const sendEmailVerification = ({origin, email, name, verificationToken}) => {
 

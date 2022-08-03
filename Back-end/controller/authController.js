@@ -1,9 +1,10 @@
 const User = require('../model/User')
 const Token = require('../model/Token')
 const CustomError = require('../error')
-const {createTokenUser, sendEmailVerification, attachCookiesToResponse} = require('../util')
-const crypto = require('crypto')
+const {createTokenUser, sendEmailVerification, attachCookiesToResponse, sendForgotPasswordLink, createCryptoToken, createHash} = require('../util')
 const {StatusCodes} = require('http-status-codes')
+
+const origin = 'http://localhost:3000'
 
 const register = async(req, res) => {
     const {firstName, lastName, email, password} = req.body
@@ -16,13 +17,10 @@ const register = async(req, res) => {
     const isFirstAccount = (await User.countDocuments({})) === 0;
     const role = isFirstAccount ? 'admin' : 'user'
 
-    let verificationToken = crypto.randomBytes(40).toString('hex')
+    let verificationToken = createCryptoToken(40)
 
     const user = await User.create({firstName, lastName, email, password, role, verificationToken})
 
-    // const tokenUser = createTokenUser(user)
-
-    const origin = 'http://localhost:3000'
     // send email verification
     await sendEmailVerification({
         name: user.firstName, 
@@ -87,7 +85,7 @@ const login = async(req, res) => {
         return
     }
 
-    refreshToken = crypto.randomBytes(40).toString('hex')
+    refreshToken = createCryptoToken(40)
     const ip = req.ip
     const userAgent = req.headers['user-agent']
     const userToken = {ip, userAgent, refreshToken, user: user._id}
@@ -100,24 +98,70 @@ const login = async(req, res) => {
 
 const logout = async(req, res) => {
     // find user token and delete in db
-    console.log(req.user)
-    // res.cookie('accessToken', "", {
-    //     signed: true,
-    //     expires: new Date(Date.now())
-    // })
-    // res.cookie('refreshToken', "", {
-    //     signed: true,
-    //     expires: new Date(Date.now())
-    // })
-    res.send('forgotPassword')
+    const userToken = await Token.findOneAndDelete({user: req.user.userId})
+    res.cookie('accessToken', "", {
+        signed: true,
+        expires: new Date(Date.now())
+    })
+    res.cookie('refreshToken', "", {
+        signed: true,
+        expires: new Date(Date.now())
+    })
+    res.status(StatusCodes.OK).json({message: 'User loggout out!'})
 }
 
 const forgotPassword = async(req, res) => {
-    res.send('forgotPassword')
+    const { email } = req.body
+    if(!email) {
+        throw new CustomError.BadRequestError('Please provide your email')
+    }
+    const user = await User.findOne({email})
+    if(!user) {
+        throw new CustomError.UnauthorizedError('You are are not authorized to change the password')
+    }
+    let passwordVerificationToken = createCryptoToken(60)
+    // attach password reset email, that a user can click to navigate to reset-password
+    // endpoint
+    sendForgotPasswordLink({origin, email: user.email, name: user.firstName, passwordVerificationToken})
+
+    const thiryMinutes = 1000 * 60 * 30
+    const passwordVerificationTokenExpiration = new Date(Date.now() + thiryMinutes)
+
+    user.passwordVerificationToken = passwordVerificationToken
+    user.passwordVerificationTokenExpiration = passwordVerificationTokenExpiration
+    await user.save()
+    res
+    .status(StatusCodes.OK)
+    .json({ message: 'Please check your email for reset password link' });
 }
 
 const resetPassword = async(req, res) => {
-    res.send('resetPassword')
+    const {token, email, oldPassword, newPassword, confirmNewPassword} = req.body
+    if(!oldPassword || !newPassword || !confirmNewPassword) {
+        throw new CustomError.BadRequestError('Please provide all values')
+    }
+    // check first the password token if it still valid
+    const user = await User.findOne({email})
+
+    if(!(user.passwordVerificationToken === token && 
+        user.passwordVerificationTokenExpiration > Date.now())) {
+            throw new CustomError.UnauthorizedError('AUthorization failed')
+    }
+    const isOldPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+    if(!isOldPasswordCorrect) {
+        throw new CustomError.UnauthorizedError('Wrong credentials! old password is incorrect')
+    }
+    if(newPassword !== confirmNewPassword) {
+        throw new CustomError.UnauthorizedError('New password and Confirm password did not match')
+    }
+    // everthing went well, update the password in database
+    user.password = newPassword
+    user.passwordVerificationToken = null
+    user.passwordVerificationTokenExpiration = null
+    await user.save()
+    res
+    .status(StatusCodes.OK)
+    .json({ message: 'Success, Please go to login to check it' });
 }
 
 module.exports = {

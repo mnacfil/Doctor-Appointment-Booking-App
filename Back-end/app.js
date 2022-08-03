@@ -9,6 +9,7 @@ const connectToDb = require('./db/connectToDb')
 
 // Routes
 const authRouter = require('./routes/authRoutes')
+const userRouter = require('./routes/userRoutes')
 
 // middleware
 const morgan = require('morgan')
@@ -21,10 +22,11 @@ app.use(express.json())
 app.use(cookieParser(process.env.JWT_SECRET))
 
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/users', userRouter)
 
 // testing
 app.get('/api/v1', (req, res) => {
-    // console.log(req.signedCookies)
+    console.log(req.signedCookies)
     res.send('Hello World')
 })
 
