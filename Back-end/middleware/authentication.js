@@ -7,8 +7,8 @@ const authenticateUser = async (req, res, next) => {
     const {accessJWT, refreshJWT} = req.signedCookies
     try {
         if(accessJWT) {
-            const {user: {name, email, userId}}= isTokenValid(accessJWT)
-            req.user = {name, email, userId}
+            const {user: {name, email, userId, role}}= isTokenValid(accessJWT)
+            req.user = {name, email, userId, role}
             return next() // pass to next middleware (routes that need to authenticate user)
         }
     // if the accessJWT expires, use refresh token to allow user to proceed, and refresh
@@ -33,7 +33,7 @@ const authenticateUser = async (req, res, next) => {
 // Sets to only admin can access this resources
 const authorizePermission = (...roles) => {
     return (req, res, next) => {
-        if(!roles.includes('admin')) {
+        if(!roles.includes(req.user.role)) {
             throw new CustomError.UnauthorizedError('You are not authorized to access this resources')
         }
         next() // pass to route where admin only can access.

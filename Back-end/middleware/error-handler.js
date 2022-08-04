@@ -12,6 +12,10 @@ const errorHandlerMiddleware = (err, req, res, next) => {
             return message
         }).join(', ')
     }
+    if(err.name === 'CastError') {
+        customError.statusCode = StatusCodes.NOT_FOUND
+        customError.message = `Resource not found, No user found with id : ${err.value}`
+    }
     return res.status(customError.statusCode).json({message: customError.message})
 }
 

@@ -13,7 +13,7 @@ const {authenticateUser, authorizePermission} = require('../middleware/authentic
 
 router.route('/').get([authenticateUser, authorizePermission('admin')],getAllUser)
 
-router.route('/myProfile').get(myProfile)
+router.route('/myProfile').get(authenticateUser,myProfile)
 
 router.route('/:id').
     get(authenticateUser, getSingleUser).

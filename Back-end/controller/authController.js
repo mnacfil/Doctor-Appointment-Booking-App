@@ -7,7 +7,7 @@ const {StatusCodes} = require('http-status-codes')
 const origin = 'http://localhost:3000'
 
 const register = async(req, res) => {
-    const {firstName, lastName, email, password} = req.body
+    const {firstName, lastName, contactNumber, address, email, password} = req.body
 
     const emailAlreadyExist = await User.findOne({email})
     if(emailAlreadyExist) {
@@ -19,7 +19,16 @@ const register = async(req, res) => {
 
     let verificationToken = createCryptoToken(40)
 
-    const user = await User.create({firstName, lastName, email, password, role, verificationToken})
+    const user = await User.create({
+        firstName, 
+        lastName, 
+        contactNumber,
+        address,
+        email, 
+        password, 
+        role, 
+        verificationToken
+    })
 
     // send email verification
     await sendEmailVerification({
