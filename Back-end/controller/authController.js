@@ -136,7 +136,7 @@ const forgotPassword = async(req, res) => {
     const thiryMinutes = 1000 * 60 * 30
     const passwordVerificationTokenExpiration = new Date(Date.now() + thiryMinutes)
 
-    user.passwordVerificationToken = passwordVerificationToken
+    user.passwordVerificationToken = createHash(passwordVerificationToken)
     user.passwordVerificationTokenExpiration = passwordVerificationTokenExpiration
     await user.save()
     res
@@ -152,7 +152,7 @@ const resetPassword = async(req, res) => {
     // check first the password token if it still valid
     const user = await User.findOne({email})
 
-    if(!(user.passwordVerificationToken === token && 
+    if(!(user.passwordVerificationToken === createHash(token) && 
         user.passwordVerificationTokenExpiration > Date.now())) {
             throw new CustomError.UnauthorizedError('AUthorization failed')
     }
