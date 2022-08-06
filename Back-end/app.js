@@ -11,6 +11,7 @@ const connectToDb = require('./db/connectToDb')
 const authRouter = require('./routes/authRoutes')
 const userRouter = require('./routes/userRoutes')
 const doctorRouter = require('./routes/doctorRoutes')
+const appointmentRouter = require('./routes/appointmentRoutes')
 
 // middleware
 const morgan = require('morgan')
@@ -25,6 +26,7 @@ app.use(cookieParser(process.env.JWT_SECRET))
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/doctors', doctorRouter)
+app.use('/api/v1/appointments', appointmentRouter)
 
 // testing
 app.get('/api/v1', (req, res) => {

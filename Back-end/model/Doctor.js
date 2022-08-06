@@ -49,8 +49,7 @@ const DoctorSchema = new mongoose.Schema({
         default: 'pending'
     },
     schedule: {
-        type: Number,
-        default: 9
+        type: Array,
     },
     specialization: {
         type: String,
