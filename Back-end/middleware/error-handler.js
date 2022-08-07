@@ -16,6 +16,10 @@ const errorHandlerMiddleware = (err, req, res, next) => {
         customError.statusCode = StatusCodes.NOT_FOUND
         customError.message = `Resource not found, No user found with id : ${err.value}`
     }
+    // if(err.code = 11000) {
+    //     customError.StatusCodes = StatusCodes.BAD_REQUEST
+    //     customError.message = `Duplicate error`
+    // }
     return res.status(customError.statusCode).json({message: customError.message})
 }
 

@@ -17,6 +17,12 @@ const AppointmentSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide time']
     },
+    status: {
+        type:String,
+        enum: ['pending', 'declined', 'approved'],
+        default: 'pending'
+    },
+    approveDate: Date,
     user: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
@@ -30,10 +36,6 @@ const AppointmentSchema = new mongoose.Schema({
 
 }, {timestamps: true})
 
-module.exports = mongoose.model('Appointment', AppointmentSchema)
+AppointmentSchema.index({user: 1, doctor: 1}, {unique: true})
 
-// To do
-// the user send appointment to doctor (thru email)
-// setup functionality where is if the time and date of appointment is not available time for doctor
-// then the doctor can view and accept the appointment
-// send verification email
+module.exports = mongoose.model('Appointment', AppointmentSchema)

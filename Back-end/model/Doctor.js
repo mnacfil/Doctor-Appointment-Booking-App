@@ -49,7 +49,8 @@ const DoctorSchema = new mongoose.Schema({
         default: 'pending'
     },
     schedule: {
-        type: Array,
+        type: String,
+        default: '8:00 am to 16:00 pm'
     },
     specialization: {
         type: String,

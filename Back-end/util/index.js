@@ -2,6 +2,7 @@ const createTokenUser = require('./createTokenUser')
 const {isTokenValid, attachCookiesToResponse} = require('./jwt')
 const sendEmailVerification = require('./EmailVerification/verify-email/sendEmailVerification')
 const sendForgotPasswordLink = require('./EmailVerification/forgot-password/sendForgotPasswordLink')
+const sendAppointmentToDoctor = require('./EmailVerification/book-appointment/sendAppointmentVerification')
 const {createCryptoToken, createHash} = require('./crypto')
 const accessPermission = require('./accessPermission')
 
@@ -13,5 +14,6 @@ module.exports = {
     sendForgotPasswordLink,
     createCryptoToken,
     createHash,
-    accessPermission
+    accessPermission,
+    sendAppointmentToDoctor
 }

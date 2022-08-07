@@ -50,6 +50,10 @@ const UserSchema = new mongoose.Schema({
         enum: ['admin', 'user', 'doctor'],
         default: 'user'
     },
+    appointment: {
+        type: mongoose.Types.ObjectId,
+        ref: "Appointment"
+    },
     verificationToken: String,
     isVerified: {type: Boolean, default: false},
     verified: Date,
