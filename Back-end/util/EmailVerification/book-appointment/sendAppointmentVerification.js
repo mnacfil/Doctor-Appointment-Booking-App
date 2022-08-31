@@ -1,4 +1,4 @@
-const sendEmail = require('../sendEmail')
+const sendEmail = require('../sendEmail');
 
 const sendAppointmentToDoctor = ({ email, name, overview, time}) => {
 
@@ -12,7 +12,7 @@ const sendAppointmentToDoctor = ({ email, name, overview, time}) => {
                 <p>Hi ${name}</p>
                 <br>
                 <p>
-                    ${overview}
+                    I would like to book an appointment to you. Here's the overview of what current situation is "${overview}". 
                 </p>
                 <br>
                 <p>

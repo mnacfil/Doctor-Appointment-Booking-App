@@ -11,7 +11,10 @@ const {
     createDoctorAccount
 } = require('../controller/doctorController')
 
-router.route('/').get( getAllDoctor).post(createDoctorAccount)
+router.route('/').
+    get( getAllDoctor).
+    post(createDoctorAccount)
+    
 router.route('/:id').
     get( getSingleDoctor).
     patch( updateDoctor).

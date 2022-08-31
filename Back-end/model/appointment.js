@@ -1,12 +1,4 @@
-const mongoose = require('mongoose')
-// diagnose
-// time
-// name,
-// age
-// email
-// address
-// user
-// doctor
+const mongoose = require('mongoose');
 
 const AppointmentSchema = new mongoose.Schema({
     overview: {
@@ -34,8 +26,8 @@ const AppointmentSchema = new mongoose.Schema({
         required: true
     }
 
-}, {timestamps: true})
+}, {timestamps: true});
 
-AppointmentSchema.index({user: 1, doctor: 1}, {unique: true})
+AppointmentSchema.index({user: 1, doctor: 1}, {unique: true});
 
-module.exports = mongoose.model('Appointment', AppointmentSchema)
+module.exports = mongoose.model('Appointment', AppointmentSchema);

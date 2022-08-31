@@ -67,19 +67,19 @@ const DoctorSchema = new mongoose.Schema({
     passwordVerificationTokenExpiration: Date
 })
 
-// DoctorSchema.pre('save', async function() {
-//     if(!this.isModified('password')) return
-//     const salt = await bcrypt.genSalt(10)
-//     this.password = await bcrypt.hash(this.password, salt)
-// })
+DoctorSchema.pre('save', async function() {
+    if(!this.isModified('password')) return
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
+})
 
 // DoctorSchema.post('remove', async function() {
 //     await this.model('Token').deleteMany({user: this._id})
 // })
 
-// DoctorSchema.methods.isPasswordCorrect = async function(userPassword) {
-//     const isMatch = await bcrypt.compare(userPassword, this.password)
-//     return isMatch
-// }
+DoctorSchema.methods.isPasswordCorrect = async function(userPassword) {
+    const isMatch = await bcrypt.compare(userPassword, this.password)
+    return isMatch
+}
 
 module.exports = mongoose.model('Doctor', DoctorSchema)

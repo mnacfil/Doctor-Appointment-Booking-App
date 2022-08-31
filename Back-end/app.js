@@ -37,7 +37,7 @@ app.get('/api/v1', (req, res) => {
 app.use(errorHandlerMiddleware)
 app.use(notFoundMiddleware)
 
-const port = process.env.PORT || '3000'
+const port = process.env.PORT || 3000
 
 const start = async () => {
     try {

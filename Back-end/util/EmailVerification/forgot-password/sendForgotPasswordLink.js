@@ -2,7 +2,7 @@ const sendEmail = require('../sendEmail')
 
 const sendForgotPasswordLink = ({origin, email, name, passwordVerificationToken}) => {
 
-    const resetPasswordPath = `${origin}/verify-email?token=${passwordVerificationToken}&email=${email}`
+    const resetPasswordPath = `${origin}/reset-password?token=${passwordVerificationToken}&email=${email}`
 
     return sendEmail({
         from: 'Engr Nacfil, || mnacfil@gmail.com',

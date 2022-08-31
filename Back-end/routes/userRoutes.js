@@ -1,5 +1,5 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
 const {
     getAllUser,
@@ -7,17 +7,17 @@ const {
     updateUser,
     deleteUser,
     myProfile
-} = require('../controller/userController')
+} = require('../controller/userController');
 
-const {authenticateUser, authorizePermission} = require('../middleware/authentication')
+const {authenticateUser, authorizePermission} = require('../middleware/authentication');
 
-router.route('/').get([authenticateUser, authorizePermission('admin')],getAllUser)
+router.route('/').get([authenticateUser, authorizePermission('admin')],getAllUser);
 
-router.route('/myProfile').get(authenticateUser,myProfile)
+router.route('/myProfile').get(authenticateUser,myProfile);
 
 router.route('/:id').
     get(authenticateUser, getSingleUser).
     patch(authenticateUser, updateUser).
     delete(authenticateUser, deleteUser)
 
-module.exports = router
+module.exports = router;

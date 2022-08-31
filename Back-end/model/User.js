@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
-const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
     firstName: {
@@ -59,21 +59,21 @@ const UserSchema = new mongoose.Schema({
     verified: Date,
     passwordVerificationToken: String,
     passwordVerificationTokenExpiration: Date
-})
+});
 
 UserSchema.pre('save', async function() {
-    if(!this.isModified('password')) return
-    const salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, salt)
+    if(!this.isModified('password')) return;
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
 })
 
 UserSchema.post('remove', async function() {
-    await this.model('Token').deleteMany({user: this._id})
+    await this.model('Token').deleteMany({user: this._id});
 })
 
 UserSchema.methods.isPasswordCorrect = async function(userPassword) {
-    const isMatch = await bcrypt.compare(userPassword, this.password)
-    return isMatch
+    const isMatch = await bcrypt.compare(userPassword, this.password);
+    return isMatch;
 }
 
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model('User', UserSchema);

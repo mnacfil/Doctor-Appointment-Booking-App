@@ -1,7 +1,10 @@
 TO DO
+[] How to implement doctor to Auth controller
 
 [] ApprovedAppointment , then send email to client
+    - confirmAppointment, 
 [] Get all available doctor (user perspective)
 [] Get all appointment (user perspective), only approved
 [] Get all appointment (doctor perspective)
+    - approved or not
 

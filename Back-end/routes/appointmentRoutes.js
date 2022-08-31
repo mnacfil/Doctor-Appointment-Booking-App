@@ -9,7 +9,7 @@ const {
     deleteAppointment
 } = require('../controller/appointmentController')
 
-const {authenticateUser} = require('../middleware/authentication')
+const {authenticateUser, authorizePermission} = require('../middleware/authentication')
 
 router.route('/').
     get(authenticateUser, getAllAppointment).

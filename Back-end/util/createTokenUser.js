@@ -1,5 +1,3 @@
-
-
 const createTokenUser = (user) => {
     return {
         name: `${user.firstName} ${user.lastName}`,
